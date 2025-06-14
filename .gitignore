@@ -1,0 +1,40 @@
+# Node.js
+node_modules/
+npm-debug.log*
+.env
+*.log
+
+# React builds
+build/
+dist/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and OS specific files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Arduino/ESP32 related (if you copy your .ino into this project)
+*.ino.bin
+*.ino.elf
+*.ino.partitions.bin
+*.ino.hex
+*.ino.f_cpu_80mhz.bin
+*.lst
+*.map
+*.su
+*.sym
+*.s
+*.c
+*.cpp
+*.h
+*.mk
+*.obj
+*.o
+*.d
+*.gcno
+*.gcda
+*.gcov
