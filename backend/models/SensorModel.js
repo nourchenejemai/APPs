@@ -13,6 +13,7 @@ const SensorSchema = new Schema(
             type: Number,
             required: true 
         },
+       
         timestamp: {
             type: Date, default: Date.now 
 

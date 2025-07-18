@@ -16,7 +16,7 @@ export const createSensorData = async (req, res) => {
 // GET /api/sensor-data
 export const getSensorData = async (req, res) => {
   try {
-    const data = await SensorModel.find().sort({ time: 1 }); // sort chronologically
+    const data = await SensorModel.find().sort({ time: 1 }); 
     res.status(200).json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

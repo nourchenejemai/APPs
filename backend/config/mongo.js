@@ -1,1 +1,1 @@
-export const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/your_mongodb_database_name';
+export const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/database';

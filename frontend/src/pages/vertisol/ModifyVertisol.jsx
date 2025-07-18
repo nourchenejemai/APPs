@@ -12,6 +12,7 @@ function ModifyVertisol() {
 
 
      const [form, setForm] = useState({
+      geom: '',
       couleur:'', 
       typecoul: ''
        });
@@ -23,7 +24,8 @@ function ModifyVertisol() {
       setEditId(selectedVert.id)
       setForm({
        
-        
+        geom: selectedVert.geom || '',
+
         couleur: selectedVert.couleur || '',
         typecoul: selectedVert.typecoul || '',
 
@@ -78,7 +80,10 @@ const handleSubmit = async (e) => {
         <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4">
           
        
-
+        <div className="grid grid-cols-1 gap-2">
+          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
+         
+        </div>
         <div className="grid grid-cols-1 gap-2 ">
           <input name="couleur" placeholder="Couleur" className="border p-2 rounded" value={form.couleur} onChange={handleChange} />
           

@@ -1,37 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Marker, Popup, GeoJSON, useMap } from "react-leaflet";
-import L from "leaflet";
-import { useNavigate  } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { GeoJSON, useMap } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
+import "leaflet/dist/leaflet.css";
 
-const Icon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
-  iconSize: [25, 25],
-});
-
-function getPolygonCenter(coords) {
-  const flat = coords.flat(2); // Flatten nested arrays to get all points
-  const lats = flat.map((p) => p[1]);
-  const lngs = flat.map((p) => p[0]);
-  const lat = (Math.min(...lats) + Math.max(...lats)) / 2;
-  const lng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
-  return [lat, lng];
-}
+// Style de la couche Vertisol (marron)
+const vertisolStyle = {
+  color: "#8B4513",        // bordure marron foncé
+  fillColor: "#DEB887",    // remplissage beige
+  weight: 2,
+  fillOpacity: 0.6,
+};
 
 function VertisolMap() {
-  const [Vert, setVert] = useState([]);
-  const map = useMap(); 
+  const [vertisols, setVertisols] = useState(null);
+  const geoJsonRef = useRef(null);
+  const featureCount = useRef(0);
+  const map = useMap();
   const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8080/api/vertisolPoint")
       .then((res) => res.json())
-      .then((data) => {
-        if (data && data.features) {
-          setVert(data.features);
+      .then((json) => {
+        if (json?.features?.length) {
+          setVertisols(json);
         }
       })
-      .catch((err) => console.error("Error fetching vertisol:", err));
+      .catch((err) => console.error("Error fetching Vertisol data:", err));
   }, []);
+
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this Vertisol?")) {
       fetch(`http://localhost:8080/api/vertisols/${id}`, {
@@ -39,62 +36,68 @@ function VertisolMap() {
       })
         .then((res) => {
           if (res.ok) {
-            setVert((prev) => prev.filter((f) => f.properties.id !== id));
+            setVertisols((prev) => ({
+              ...prev,
+              features: prev.features.filter((f) => f.properties.id !== id),
+            }));
           } else {
             alert("Failed to delete Vertisol");
           }
         })
-        .catch((err) => {
-          console.error("Delete error:", err);
-        });
+        .catch((err) => console.error("Delete error:", err));
     }
   };
 
- const handleEdit = (vert) => {
-      navigate("/ModifyVertisol", { state: { vert } });
-    };
-  return (
-    <>
-         {Vert.map((feature, index) => {
-           const geometry = feature.geometry;
-           const props = feature.properties;
-   
-           if (geometry?.type === "MultiPolygon") {
-             const center = getPolygonCenter(geometry.coordinates);
-   
-             return (
-               <React.Fragment key={index}>
-                 
-                 {/* Marqueur au centre */}
-                 <Marker position={center} icon={Icon}>
-                   <Popup>
-                     Couleur : {props.couleur}<br />
-                    TypeC : {props.typecoul}<br />
+  const handleEdit = (vert) => {
+    navigate("/ModifyVertisol", { state: { vert } });
+  };
 
-                    
-   
-                    <button
-                           style={{ backgroundColor: 'red', color: 'white', marginRight: '5px' }}
-                           onClick={() => handleDelete(props.id)}
-                         >
-                           Delete
-                         </button>
-                         <button
-                           style={{ backgroundColor: 'blue', color: 'white' }}
-                           onClick={() => handleEdit(props)}
-                         >
-                           Edit
-                         </button>
-                   </Popup>
-                 </Marker>
-               </React.Fragment>
-             );
-           }
-   
-           return null;
-         })}
-       </>
-  );
+  return vertisols ? (
+    <GeoJSON
+      ref={(layer) => {
+        if (layer) geoJsonRef.current = layer;
+      }}
+      data={vertisols}
+      style={() => vertisolStyle}
+      onEachFeature={(feature, layer) => {
+        const props = feature.properties;
+
+        const container = document.createElement("div");
+        container.innerHTML = `
+          <strong>Vertisol</strong><br />
+          <b>Couleur:</b> ${props.couleur}<br />
+          <b>Type couleur:</b> ${props.typecoul}<br /><br />
+          <button id="edit-${props.id}" style="background:#3498db;color:white;margin-right:5px">Edit</button>
+          <button id="delete-${props.id}" style="background:#e74c3c;color:white">Delete</button>
+        `;
+
+        layer.bindPopup(container);
+
+        layer.on("popupopen", () => {
+          document
+            .getElementById(`edit-${props.id}`)
+            .addEventListener("click", () => handleEdit(props));
+          document
+            .getElementById(`delete-${props.id}`)
+            .addEventListener("click", () => handleDelete(props.id));
+        });
+
+        featureCount.current += 1;
+        if (featureCount.current === vertisols.features.length) {
+          setTimeout(() => {
+            if (geoJsonRef.current) {
+              const bounds = geoJsonRef.current.getBounds();
+              if (bounds.isValid()) {
+                map.fitBounds(bounds, { padding: [50, 50] });
+              } else {
+                console.warn("Bounds are not valid.");
+              }
+            }
+          }, 100);
+        }
+      }}
+    />
+  ) : null;
 }
 
 export default VertisolMap;

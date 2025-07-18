@@ -80,3 +80,10 @@ html, body, #root {
   height: 100%;
   z-index:0;
 }
+.leaflet-search-input {
+  width: 250px;
+  font-size: 14px;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

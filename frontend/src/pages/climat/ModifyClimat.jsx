@@ -11,6 +11,7 @@ function ModifyClimat() {
 
 
      const [form, setForm] = useState({
+      geom:'',
         surface: '',
         perimetre: '',
         clmide: '',
@@ -25,6 +26,7 @@ function ModifyClimat() {
       console.log("Received selectedClimat:", selectedClimat); 
       setEditId(selectedClimat.id)
       setForm({
+        geom: selectedClimat.geom || '',
         surface: selectedClimat.surface || '',
         perimetre: selectedClimat.perimetre || '',
         clmide: selectedClimat.clmide || '',
@@ -81,7 +83,9 @@ const handleSubmit = async (e) => {
 
 
         <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4">
-          
+          <div className="grid grid-cols-1 gap-4">
+          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
+          </div>
         
           <div className="grid grid-cols-3 gap-4">
           <input name="surface" placeholder="Surface" className="border p-2 rounded" value={form.surface ?? ''} onChange={handleChange} />

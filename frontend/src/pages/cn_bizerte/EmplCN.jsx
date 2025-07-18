@@ -1,91 +1,72 @@
 import React, { useEffect, useState, useRef } from "react";
 import { GeoJSON, useMap } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+import "leaflet/dist/leaflet.css";
 
-const formStyle = {
-  color: "#1f77b4",
-  weight: 2,
-  fillColor: "#aec7e8",
-  fillOpacity: 0.6,
+// Style vert pour CN
+const lineStyle = {
+  color: "green",
+  weight: 3,
 };
 
-function BarragesMap() {
-  const [data, setData] = useState(null);
+function CnBZMap() {
+  const [cnBZ, setCnBZ] = useState(null);
   const geoJsonRef = useRef(null);
+  const featureCount = useRef(0);
   const map = useMap();
   const navigate = useNavigate();
-  const featureCount = useRef(0);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/dams/dams")
+    fetch("http://localhost:8080/api/cnbz")
       .then((res) => res.json())
-      .then(json => {
-  if (json?.features?.length) {
-    // Convertir "geom" -> "geometry"
-    const fixed = {
-      ...json,
-      features: json.features.map(f => ({
-        ...f,
-        geometry: f.geom, // 💡 important
-      }))
-    };
-
-    setData(fixed);
-    console.log("Polygones barrages corrigés:", fixed);
-  }
-})
-
-      .catch((err) => console.error("Error fetching barrages:", err));
+      .then((json) => {
+        if (json?.features?.length) {
+          setCnBZ(json);
+        }
+      })
+      .catch((err) => console.error("Error fetching CN:", err));
   }, []);
 
-  const handleDelete = (gid) => {
-    if (window.confirm("Are you sure you want to delete this dam?")) {
-      fetch(`http://localhost:8080/api/barrages/${gid}`, {
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this CN?")) {
+      fetch(`http://localhost:8080/api/cn/${id}`, {
         method: "DELETE",
       })
         .then((res) => {
           if (res.ok) {
-            setData((prev) => ({
+            setCnBZ((prev) => ({
               ...prev,
-              features: prev.features.filter(f => f.properties.gid !== gid),
+              features: prev.features.filter((f) => f.properties.id !== id),
             }));
           } else {
-            alert("Failed to delete dam");
+            alert("Failed to delete CN");
           }
         })
-        .catch((err) => {
-          console.error("Delete error:", err);
-        });
+        .catch((err) => console.error("Delete error:", err));
     }
   };
 
-  const handleEdit = (dam) => {
-    navigate("/ModifyBarrage", {
-      state: {
-        barrage: {
-          ...dam.properties,
-          geom: dam.geom,
-        },
-      },
-    });
+  const handleEdit = (cn) => {
+    navigate("/ModifyCN", { state: { cn } });
   };
 
-  return data ? (
+  return cnBZ ? (
     <GeoJSON
       ref={(layer) => {
         if (layer) geoJsonRef.current = layer;
       }}
-      data={data}
-      style={() => formStyle}
+      data={cnBZ}
+      style={() => lineStyle}
       onEachFeature={(feature, layer) => {
         const props = feature.properties;
 
         const container = document.createElement("div");
         container.innerHTML = `
-          <strong>${props.name}</strong><br />
-          <b>Type:</b> ${props.type_bge}<br />
-          <b>Code:</b> ${props.code}<br />
-          <b>Description:</b> ${props.disc}<br /><br />
+          <strong>${props.object || "CN"}</strong><br />
+          <b>Fnode:</b> ${props.fnode}<br />
+          <b>Tnode:</b> ${props.tnode}<br />
+          <b>Length:</b> ${props.lengthh}<br />
+          <b>ID:</b> ${props.id}<br /><br />
           <button id="edit-${props.id}" style="background:#3498db;color:white;margin-right:5px">Edit</button>
           <button id="delete-${props.id}" style="background:#e74c3c;color:white">Delete</button>
         `;
@@ -95,15 +76,14 @@ function BarragesMap() {
         layer.on("popupopen", () => {
           document
             .getElementById(`edit-${props.id}`)
-            .addEventListener("click", () => handleEdit(feature));
+            .addEventListener("click", () => handleEdit(props));
           document
             .getElementById(`delete-${props.id}`)
             .addEventListener("click", () => handleDelete(props.id));
         });
 
-        // Zoom automatique une seule fois après le rendu complet
         featureCount.current += 1;
-        if (featureCount.current === data.features.length) {
+        if (featureCount.current === cnBZ.features.length) {
           setTimeout(() => {
             if (geoJsonRef.current) {
               const bounds = geoJsonRef.current.getBounds();
@@ -120,4 +100,4 @@ function BarragesMap() {
   ) : null;
 }
 
-export default BarragesMap;
+export default CnBZMap;

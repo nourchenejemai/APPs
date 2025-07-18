@@ -34,9 +34,24 @@ function Forages() {
   };
 
   const handleDelete = async (gid) => {
-    await fetch(`http://localhost:8080/api/forages/${gid}`, { method: 'DELETE' });
-    fetchForages();
-  };
+  const confirmDelete = window.confirm("Are you sure you want to delete this item?");
+  if (!confirmDelete) return; // Exit if user cancels
+
+  try {
+    const response =     await fetch(`http://localhost:8080/api/forages/${gid}`, { method: 'DELETE' });
+
+    if (response.ok) {
+      alert("Deleted successfully!");
+      fetchForages(); 
+    } else {
+      alert("Failed to delete. Server responded with an error.");
+    }
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    alert("An error occurred while deleting.");
+  }
+};
+
 
   useEffect(() => {
     fetchForages();

@@ -7,7 +7,8 @@
             "driver": "PostgreSQL",
             "name": "gis_db",
             "database": "gis_db",
-            "username": "postgres"
+            "username": "postgres",
+            "password": "postgresql"
         }
     ]
 }

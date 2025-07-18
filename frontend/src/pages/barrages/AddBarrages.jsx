@@ -7,6 +7,7 @@ function AddBarrages() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     gid: '',
+    geom: '',
     name: '',
     name_ar: '',
     name_fr: '',
@@ -36,6 +37,7 @@ function AddBarrages() {
       alert('Formulaire soumis avec succès!');
       setForm({
         gid: '',
+        geom: '',
         name: '',
         name_ar: '',
         name_fr: '',
@@ -59,7 +61,9 @@ function AddBarrages() {
           </div>
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Ajouter un Barrage</h2>
       <form onSubmit={handleSubmit} className=" bg-white p-4 rounded shadow-md space-y-4">
-        
+        <div className="grid grid-cols-1 gap-4">
+          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
+          </div>
         <div className="grid grid-cols-3 gap-4">
           <input name="name" placeholder="Nom" className="border p-2 rounded" value={form.name} onChange={handleChange} />
           <input name="name_ar" placeholder="Nom en Arabe" className="border p-2 rounded" value={form.name_ar} onChange={handleChange} />

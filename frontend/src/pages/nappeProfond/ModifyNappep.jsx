@@ -12,6 +12,7 @@ function ModifyNappep() {
 
 
      const [form, setForm] = useState({
+      geom: '',
         surface: '',
         perimetre: '',
         npride: '',
@@ -29,6 +30,7 @@ function ModifyNappep() {
       console.log("Received selectedNappe:", selectedNappe); 
       setEditId(selectedNappe.id)
       setForm({
+        geom: selectedNappe.geom || '',
         surface: selectedNappe.surface || '',
         perimetre: selectedNappe.perimetre || '',
         npride: selectedNappe.npride || '',
@@ -86,13 +88,14 @@ const handleSubmit = async (e) => {
         <h2 className="text-2xl font-bold mb-4 text-center">Modifier Nappe Profond</h2>
 
 
-        <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4">
-          
-        
-          <div className="grid grid-cols-3 gap-4">
-          <input name="surface" placeholder="Surface" className="border p-2 rounded" value={form.surface ?? ''} onChange={handleChange} />
+       <form onSubmit={handleSubmit} className=" bg-white p-4 rounded shadow-md space-y-4">
+         <div className="grid grid-cols-1 gap-4">
+          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
+          </div>
+        <div className="grid grid-cols-3 gap-4">
+          <input name="surface" placeholder="Surface" className="border p-2 rounded" value={form.surface} onChange={handleChange} />
           <input name="perimetre" placeholder="Perimetre" className="border p-2 rounded" value={form.perimetre} onChange={handleChange} />
-          <input name="npride" placeholder="npride" className="border p-2 rounded" value={form.npride} onChange={handleChange} />
+          <input name="npride" placeholder="nphide" className="border p-2 rounded" value={form.npride} onChange={handleChange} />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
@@ -101,12 +104,11 @@ const handleSubmit = async (e) => {
           <input name="nprres" placeholder="nprres" className="border p-2 rounded" value={form.nprres} onChange={handleChange} />
         </div>
 
-          <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <input name="nprexp" placeholder="nprexp" className="border p-2 rounded" value={form.nprexp} onChange={handleChange} />
           <input name="nprqmi" placeholder="nprqmi" className="border p-2 rounded w-full" value={form.nprqmi} onChange={handleChange} />
           <input name="nprqma" placeholder="nprqma" className="border p-2 rounded w-full" value={form.nprqma} onChange={handleChange} />
-        </div>
-      
+</div>
 
         <div className="text-center">
           <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow">

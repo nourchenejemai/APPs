@@ -30,10 +30,26 @@ function Barrages() {
     navigate('/ModifyBarrage', { state: { barrage } });
   };
 
-  const handleDelete = async (gid) => {
-    await fetch(`http://localhost:8080/api/barrages/${gid}`, { method: 'DELETE' });
-    fetchBarrages();
-  };
+ const handleDelete = async (gid) => {
+  const confirmDelete = window.confirm("Are you sure you want to delete this item?");
+  if (!confirmDelete) return; // Exit if user cancels
+
+  try {
+    const response = await fetch(`http://localhost:8080/api/barrages/${gid}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      alert("Deleted successfully!");
+      fetchBarrages(); // Refresh list
+    } else {
+      alert("Failed to delete. Server responded with an error.");
+    }
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    alert("An error occurred while deleting.");
+  }
+};
 
   useEffect(() => {
     fetchBarrages();

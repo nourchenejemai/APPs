@@ -35,6 +35,7 @@ function ModifyBarrage() {
         code: selectedBarrage.code || '',
         disc: selectedBarrage.disc || '',
         geom: selectedBarrage.geom || '',
+
         });
     }else{
           console.warn("No  barrage was passed in location.state");
@@ -83,7 +84,9 @@ const handleSubmit = async (e) => {
         <h2 className="text-2xl font-bold mb-4">Modifier des Barrages</h2>
 
         <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4">
-          
+          <div className="grid grid-cols-1 gap-4">
+          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
+          </div>
         
         <div className="grid grid-cols-3 gap-4">
           <input name="name" placeholder="Nom" className="border p-2 rounded" value={form.name} onChange={handleChange} />

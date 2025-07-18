@@ -8,10 +8,11 @@ function ModifyNappeph() {
     const [loading, setLoading] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const selectedBarrage = location.state?.barrage ;
+    const selectedNappe = location.state?.nappe ;
 
 
      const [form, setForm] = useState({
+      geom: '',
         surface: '',
         perimetre: '',
         nphide: '',
@@ -25,24 +26,25 @@ function ModifyNappeph() {
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
-    if (selectedBarrage ) {
-      console.log("Received selectedBarrage:", selectedBarrage); 
-      setEditId(selectedBarrage.gid)
+    if (selectedNappe ) {
+      console.log("Received selectedNappe:", selectedNappe); 
+      setEditId(selectedNappe.id)
       setForm({
-        surface: selectedBarrage.surface || '',
-        perimetre: selectedBarrage.perimetre || '',
-        nphide: selectedBarrage.nphide || '',
-        nphnom: selectedBarrage.nphnom || '',
-        nphcod: selectedBarrage.nphcod || '',
-        nphres: selectedBarrage.nphres || '',
-        nphexp: selectedBarrage.nphexp || '',
-        nphqma: selectedBarrage.nphqma || '',
+        geom: selectedNappe.geom || '',
+        surface: selectedNappe.surface || '',
+        perimetre: selectedNappe.perimetre || '',
+        nphide: selectedNappe.nphide || '',
+        nphnom: selectedNappe.nphnom || '',
+        nphcod: selectedNappe.nphcod || '',
+        nphres: selectedNappe.nphres || '',
+        nphexp: selectedNappe.nphexp || '',
+        nphqma: selectedNappe.nphqma || '',
         });
     }else{
           console.warn("No nappe Phreatique was passed in location.state");
 
     }
-  }, [selectedBarrage]);
+  }, [selectedNappe]);
         
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -77,13 +79,16 @@ const handleSubmit = async (e) => {
 
  
   return (
-    <div className="pt-24 px-6 text-gray-800">
-        <BackButton />
-        <h2 className="text-2xl font-bold mb-4">Modifier des Nappes Phreatique</h2>
-
-        <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4">
-          
-        
+   <div className="min-h-screen pt-8 px-6 bg-blue-400 text-gray-800">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-start mb-6">
+          <BackButton destination='/nappes' />
+          </div>
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Modifier Un Nappe Phreatique</h2>
+      <form onSubmit={handleSubmit} className=" bg-white p-4 rounded shadow-md space-y-4">
+        <div className="grid grid-cols-1 gap-4">
+          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
+          </div>
         <div className="grid grid-cols-3 gap-4">
           <input name="surface" placeholder="Surface" className="border p-2 rounded" value={form.surface} onChange={handleChange} />
           <input name="perimetre" placeholder="Perimetre" className="border p-2 rounded" value={form.perimetre} onChange={handleChange} />
@@ -96,7 +101,7 @@ const handleSubmit = async (e) => {
           <input name="nphres" placeholder="nphres" className="border p-2 rounded" value={form.nphres} onChange={handleChange} />
         </div>
 
-        <div className="grid grid-cols-1">
+        <div className="grid grid-cols-3 gap-4">
           <input name="nphexp" placeholder="nphexp" className="border p-2 rounded" value={form.nphexp} onChange={handleChange} />
           <input name="nphqmi" placeholder="nphqmi" className="border p-2 rounded w-full" value={form.nphqmi} onChange={handleChange} />
           <input name="nphqma" placeholder="nphqma" className="border p-2 rounded w-full" value={form.nphqma} onChange={handleChange} />
@@ -113,6 +118,7 @@ const handleSubmit = async (e) => {
         </div>
 
       </form>
+    </div>
     </div>
   );
 }

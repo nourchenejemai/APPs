@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 function AddForages() {
 
   const [forages, setForages] = useState([]);
-  const [form, setForm] = useState({ abréviati: '', nom: '', nirh: '', x: '', y: '', z: '', numéro_de: '', titre_de_l: '', délégati: '', date_d: '', date_fin: '', profondeur: '', débit: '', rabatement: '', ns: '', ph: '', salinité_: '', rs: '', entreprise: '', proge: '', nature: '', usage: '', equip: '', utilisateu: '', typ_captag: '', crepi: '', code___nom: '' });
+  const [form, setForm] = useState({ geom: '',abréviati: '', nom: '', nirh: '', x: '', y: '', z: '', numéro_de: '', titre_de_l: '', délégati: '', date_d: '', date_fin: '', profondeur: '', débit: '', rabatement: '', ns: '', ph: '', salinité_: '', rs: '', entreprise: '', proge: '', nature: '', usage: '', equip: '', utilisateu: '', typ_captag: '', crepi: '', code___nom: '' });
   const [editId, setEditId] = useState(null);
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ function AddForages() {
     }
 
     alert('Formulaire soumis avec succès!');
-    setForm({ abréviati: '', nom: '', nirh: '', x: '', y: '', z: '', numéro_de: '', titre_de_l: '', délégati: '', date_d: '', date_fin: '', profondeur: '', débit: '', rabatement: '', ns: '', ph: '', salinité_: '', rs: '', entreprise: '', proge: '', nature: '', usage: '', equip: '', utilisateu: '', typ_captag: '', crepi: '', code___nom: '' });
+    setForm({ geom:'',abréviati: '', nom: '', nirh: '', x: '', y: '', z: '', numéro_de: '', titre_de_l: '', délégati: '', date_d: '', date_fin: '', profondeur: '', débit: '', rabatement: '', ns: '', ph: '', salinité_: '', rs: '', entreprise: '', proge: '', nature: '', usage: '', equip: '', utilisateu: '', typ_captag: '', crepi: '', code___nom: '' });
     setEditId(null);
     fetchForages();
   };
@@ -49,6 +49,9 @@ function AddForages() {
 
           <h2 className="text-2xl font-bold mb-4">Ajouter des Forages </h2>
           <form onSubmit={handleSubmit} className="mb-6 bg-white p-4 rounded shadow space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
+          </div>
             {/* Row 1 */}
             <div className="grid grid-cols-3 gap-4">
               <input name="abréviati" placeholder="Abreviation" className="border p-2 rounded" value={form.abréviati} onChange={handleChange} required />

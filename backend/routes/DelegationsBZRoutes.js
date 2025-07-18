@@ -19,15 +19,21 @@ del.post('/Adddelegation', async (req, res) => {
     const form = req.body;
 
     const query = `INSERT INTO public."Delegations_Bizerte_UTM"(
-	geom, object, altnamef, reftncod, codegouv, nomgouv, shapeleng, shapearea)
+    geom,object, altnamef, reftncod, codegouv, nomgouv, shapeleng, shapearea)
     
     VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8
+        ST_GeomFromText($1, 32632), $2, $3, $4, $5, $6, $7,$8
      
       )
     `;
     const values = [
-      form.geom, form.object,form.altnamef,form.reftncod,form.codegouv,form.nomgouv,form.shapeleng,
+      form.geom,
+      form.object,
+      form.altnamef,
+      form.reftncod,
+      form.codegouv,
+      form.nomgouv,
+      form.shapeleng,
       form.shapearea
     ];
    await pool.query(query, values);

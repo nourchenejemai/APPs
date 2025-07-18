@@ -14,6 +14,9 @@ import authRouter from './routes/authRoutes.js'
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRoutes.js";
 import SensorDataRoutes from "./routes/SensorRoutes.js";
+import TDSData from "./routes/TdsRoutes.js"
+import bizerteRoute from './routes/bizerte.js';
+
 import router from "./routes/BarragesRoutes.js";
 import dams from "./routes/BarragePointsRoutes.js"
 import geojsonRoutes from "./routes/geojson.js"
@@ -24,6 +27,7 @@ import nappe from "./routes/NappePhRoutes.js"
 import nappep from "./routes/NappePRoutes.js"
 import pedolog from "./routes/PedologieRoutes.js";
 import cnbizerte from "./routes/CN_BZRoutes.js"
+import cnbz from "./routes/CnBZPointsRoutes.js"
 import del from "./routes/DelegationsBZRoutes.js"
 import reseauHydr from "./routes/ReseauHydr.js"
 import vertisol from "./routes/Vertisol_BZRoutes.js";
@@ -34,6 +38,8 @@ import nappepro from "./routes/NappepPointsRoutes.js"
 import pedol from "./routes/PegologiePointsRoutes.js";
 import vert from "./routes/Vertisol_BZPointsRoutes.js";
 import climatbz from "./routes/ClimatPointRoutes.js"
+import delegationbz from "./routes/DelegationPointsRoutes.js";
+import geologiebz from "./routes/GeologiePointsRoutes.js";
 
 dotenv.config();
 
@@ -87,6 +93,8 @@ app.use('/api', SensorDataRoutes);
 app.use('/api', contactRoutes);
 app.use("/api/geojson", geojsonRoutes);
 app.use('/api',router);
+app.use('/api', bizerteRoute);
+
 app.use("/api/dams",dams);
 
 app.use('/api',forage);
@@ -100,6 +108,8 @@ app.use("/api",nappeph);
 app.use('/api',pedolog)
 
 app.use('/api',cnbizerte)
+app.use('/api',cnbz)
+
 
 app.use('/api',del)
 app.use('/api',reseauHydr)
@@ -111,12 +121,10 @@ app.use('/api',pedol)
 app.use('/api',vert)
 
 app.use('/api',climatbz)
+app.use('/api',delegationbz)
+app.use('/api',geologiebz)
 
-
-
-
-
-
+app.use('/api',TDSData)
 
 mongoose.connect(process.env.MONGODB_URI || require('./config/mongo.js').uri, { 
     useNewUrlParser: true, 

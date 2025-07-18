@@ -42,7 +42,20 @@ import Climat from './pages/climat/Climat.jsx'
 import ClimatMap from './pages/climat/Climat.jsx'
 import ModifyClimat from './pages/climat/ModifyClimat.jsx'
 import AddClimat from './pages/climat/AddClimat.jsx'
-
+import AddNappeph from './pages/nappePhreatique/AddNappeph.jsx'
+import AddNappep from './pages/nappeProfond/AddNappep.jsx'
+import Addpedologie from './pages/pedologie/Addpedologie.jsx'
+import Addvertisol from './pages/vertisol/AddVertisol.jsx'
+import Delegation from './pages/delegation/Delegation.jsx'
+import AddDelegation from './pages/delegation/AddDelegation.jsx'
+import ModifyDelegation from './pages/delegation/ModifyDelegation.jsx'
+import DelegationMap from './pages/delegation/EmplcDelegation.jsx'
+import GeologieMap from './pages/geologie/EmplcGeologie.jsx'
+import Geologie from './pages/geologie/geologie.jsx'
+import ModifyGeologie from './pages/geologie/ModifyGeologie.jsx'
+import AddGeologie from './pages/geologie/AddGeologie.jsx'
+import CNBZMap from './pages/cn_bizerte/EmplCN.jsx'
+import TDSChart from './pages/TDSchart.jsx'
 
 
 
@@ -80,20 +93,24 @@ const App = () => {
 
         <Route path='/nappes' element={<Nappe_Ph />} />
         <Route path='/ModifyNappeph' element={<ModifyNappeph />} />
+        <Route path='/AddNappeph' element={<AddNappeph />} />
         <Route path='/EmpNappeph' element={<NappePhMap />} />
 
         
 
         <Route path='/nappepro' element={<Nappepro />} />
         <Route path='/ModifyNappep' element={<ModifyNappep />} />
+          <Route path='/AddNappep' element={<AddNappep />} />
         <Route path='/EmpNappepro' element={<NappeProMap />} />
 
         <Route path='/pedologie' element={<Pedologie />} />
         <Route path='/ModifyPed' element={<ModifyPed />} />
+        <Route path='/Addpedologie' element={<Addpedologie />} />
         <Route path='/EmpPedologie' element={<PedologieMap />} />
 
         <Route path='/EmpVertisol' element={<VertisolMap/>}/>
         <Route path='/ModifyVertisol' element={<ModifyVertisol/>}/>
+        <Route path='/Addvertisol' element={<Addvertisol />} />
         <Route path='/vertisol' element={<Vertisol />} />
 
 
@@ -101,6 +118,26 @@ const App = () => {
         <Route path='/ModifyClimat' element={<ModifyClimat />} />
         <Route path='/Addclimat' element={<AddClimat />} />
         <Route path='/EmpClimat' element={<ClimatMap />}/>
+
+        <Route path='/delegation' element={<Delegation />} />
+        <Route path='/AddDelegation' element={<AddDelegation />} />
+        <Route path='/ModifyDelegation' element={<ModifyDelegation />} />
+        <Route path='/EmpDelegation' element={<DelegationMap />}/>
+
+         <Route path='/geologie' element={<Geologie />} />
+        <Route path='/AddGeologie' element={<AddGeologie />} />
+        <Route path='/ModifyGeologie' element={<ModifyGeologie />} />
+        <Route path='/EmpGeologie' element={<GeologieMap />}/>
+
+        
+
+        <Route path='/EmpCN' element={<CNBZMap />}/>
+
+
+                <Route path='/tdschart' element={<TDSChart />}/>
+
+
+
 
 
 

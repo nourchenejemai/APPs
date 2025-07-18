@@ -62,36 +62,53 @@ const Navbar = () => {
 
         <div className="flex items-center space-x-6 relative">
           <a href="/" className="hover:text-blue-300">Home</a>
-       
-          <a href="/bizerte" className="hover:text-blue-300">Map View</a>
           <a href="/VisulisationSensor" className="hover:text-blue-300">Sensors Dashboard</a>
-          <a href="#" className="hover:text-blue-300">Data Analytics</a>
 
         
-      {/* Dropdown Button 
+      {/* Dropdown Button */}
       <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
               className="flex items-center gap-1 hover:text-blue-300"
             >
-              Nappes
+              Data Analysis
               <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 6">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
               </svg>
             </button>
 
-            * Dropdown Menu 
             {showDropdown && (
               <ul className="absolute bg-white text-black mt-2 rounded-md shadow-md w-44">
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <a href="#">Nappes Phreatiques</a>
+                  <a href="/forages">Forages</a>
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <a href="#">Nappes Profondes</a>
+                  <a href="/barrage">Barrages</a>
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <a href="/nappes">Nappes Phreatiques</a>
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <a href="/nappepro">Nappes Profondes</a>
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <a href="/pedologie">Pedologie</a>
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <a href="/vertisol">Vertisol</a>
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <a href="/climat">Climat</a>
+                </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <a href="/delegation">Delegation</a>
+                </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <a href="/geologie">Geologie</a>
                 </li>
               </ul>
             )}
-          </div> */}
+          </div> 
 
         <a href="#" className="hover:text-blue-300">About</a>
 

@@ -12,7 +12,7 @@ function ModifyForages() {
 
 
   const [form, setForm] = useState({
-    abréviati: '', nom: '', nirh: '', x: '', y: '', z: '', numéro_de: '', titre_de_l: '',
+    geom:'',abréviati: '', nom: '', nirh: '', x: '', y: '', z: '', numéro_de: '', titre_de_l: '',
     délégati: '', date_d: '', date_fin: '', profondeur: '', débit: '', rabatement: '',
     ns: '', ph: '', salinité_: '', rs: '', entreprise: '', proge: '', nature: '',
     usage: '', equip: '', utilisateu: '', typ_captag: '', crepi: '', code___nom: ''
@@ -25,6 +25,7 @@ function ModifyForages() {
       console.log("Received selectedForage:", selectedForage); 
       setEditId(selectedForage.gid)
       setForm({
+        geom: selectedForage.geom || '',
         abréviati: selectedForage.abréviati || '',
         nom: selectedForage.nom || '',
         nirh: selectedForage.nirh || '',
@@ -100,6 +101,9 @@ const handleSubmit = async (e) => {
 
         <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md space-y-4">
           {/* Form Rows */}
+          <div className="grid grid-cols-1 gap-4">
+          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
+          </div>
           <div className="grid grid-cols-3 gap-4">
 
             <input name="abréviati" placeholder="Abreviation" className="border p-2 rounded" value={form.abréviati} onChange={handleChange}  />

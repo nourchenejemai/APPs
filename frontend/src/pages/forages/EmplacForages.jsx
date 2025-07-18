@@ -15,7 +15,7 @@ function getPolygonCenter(coords) {
   return [(Math.min(...lats) + Math.max(...lats)) / 2, (Math.min(...lngs) + Math.max(...lngs)) / 2];
 }
 
-function ForagesMap() {
+function ForagesMap({ onDataReady }) {
   const [drillings, setDrillings] = useState([]);
   const map = useMap(); // Access Leaflet map instance
   const navigate = useNavigate();
