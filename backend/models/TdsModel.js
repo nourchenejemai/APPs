@@ -16,16 +16,6 @@ const tdsSchema = new Schema(
 
     } ,
     
-    temperature:{
-     type: Number,
-     required: true
-
-    }, 
-    
-    humidity:{
-        type: Number,
-        required: true,
-    },
      
     timestamp: { 
         type: Date, 

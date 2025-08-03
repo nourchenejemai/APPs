@@ -12,6 +12,7 @@ import ClimatMap from "../pages/climat/EmplacClimat";
 import DelegationMap from "./delegation/EmplcDelegation";
 import GeologieMap from "./geologie/EmplcGeologie";
 import CNBZMap from "./cn_bizerte/EmplCN";
+import ReseauMap from "../pages/resauxHydr/EmplcReseau"
 import GouvernoratBizerteMap from "../pages/EmplacGouvernorat.jsx";
 
 import SearchControl from "../pages/SearchControl.jsx";
@@ -44,6 +45,7 @@ const BizerteMap = () => {
     Delegation: false,
     Geologie: false,
     CnBZ:false,
+    ReseauHyl: false,
   });
 
   const toggleLayer = (layerName) => {
@@ -79,6 +81,8 @@ const BizerteMap = () => {
 
             { label: "Pedologie", key: "Pedologie" },
             { label: "Vertisol", key: "Vertisol" },
+            { label: "ReseauHyl", key: "ReseauHyl" },
+
 
 
 
@@ -96,29 +100,32 @@ const BizerteMap = () => {
         </div>
       </div>
 
-      {/* Map Container */}
-      <div className="w-full h-full relative">
+     <div className="w-full h-full relative">
           <MapContainer
-      center={[37.2740, 9.8739]} // Center of Bizerte
-      zoom={10}
-      minZoom={9}
-      maxZoom={14}
-      scrollWheelZoom={true}
-      style={{ height: "100vh", width: "100%" }}
-      maxBounds={[
-        [37.0, 9.4],  // Southwest corner
-        [37.6, 10.3], // Northeast corner
-      ]}
-      maxBoundsViscosity={1.0} // Prevents escaping bounds
-    >
-          <ResizeFixer />
+            center={[34.0, 9.0]} // Center Tunisia
+            zoom={6}             // Show entire country
+            minZoom={5}
+            maxZoom={14}
+            scrollWheelZoom={true}
+            style={{ height: "100vh", width: "100%" }}
+            maxBounds={[
+              [30.0, 6.0], // Southwest Tunisia
+              [38.0, 12.0] // Northeast Tunisia
+            ]}
+            maxBoundsViscosity={0.5} // Allow slight panning out of bounds
+          >
+            <ResizeFixer />
 
-   
-          <TileLayer
-            attribution="&copy; OpenStreetMap contributors"
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <SearchControl features={allFeatures} onFlyTo={(coords) => map.flyTo(coords, 12)} />
+            <TileLayer
+              attribution="&copy; OpenStreetMap contributors"
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            <SearchControl 
+              features={allFeatures} 
+              onFlyTo={(coords) => map.flyTo(coords, 12)} 
+            />
+          
 
                  
 
@@ -137,6 +144,8 @@ const BizerteMap = () => {
           
            {selectedLayers.Vertisol && <VertisolMap />}
           {selectedLayers.Climat && <ClimatMap onData={handleLayerData} />}
+          {selectedLayers.ReseauHyl && <ReseauMap />}
+
 
 
 

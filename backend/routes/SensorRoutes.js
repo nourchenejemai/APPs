@@ -4,7 +4,7 @@ import{createSensorData, getSensorData }from '../controllers/sensorController.js
 const SensorData =express.Router();
 
 SensorData.post('/sensor-data', createSensorData);
-SensorData.get('/sensor-data', getSensorData);
+SensorData.get('/getdata', getSensorData);
 
 
 

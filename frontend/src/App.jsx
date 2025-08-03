@@ -12,7 +12,7 @@ import Navbar from './components/home/Navbar.jsx'
 import VisualisationSensor from './pages/VisualisationSensor.jsx'
 import Contact from './pages/Contact.jsx'
 import DataDisplay from './pages/DataDisplay.jsx'
-import DashboardAdmin from './pages/DashboardAdmin.jsx'
+import Dashboard from './pages/DashboardAdmin.jsx'
 import Barrages from './pages/barrages/Barrages.jsx'
 import BizerteMap from './pages/BizerteMap.jsx'
 import BarragesMap from './pages/barrages/EmplacBarrages.jsx'
@@ -55,7 +55,13 @@ import Geologie from './pages/geologie/geologie.jsx'
 import ModifyGeologie from './pages/geologie/ModifyGeologie.jsx'
 import AddGeologie from './pages/geologie/AddGeologie.jsx'
 import CNBZMap from './pages/cn_bizerte/EmplCN.jsx'
+import ReseauxHydr from './pages/resauxHydr/ReseauxHydr.jsx'
+import ModifyReseau from './pages/resauxHydr/ModifyReseau.jsx'
+import AddReseau from './pages/resauxHydr/AddReseau.jsx'
+import ReseauMap from './pages/resauxHydr/EmplcReseau.jsx'
 import TDSChart from './pages/TDSchart.jsx'
+import PhChart from './pages/capteurs/Phchart.jsx'
+import Users from './pages/users.jsx'
 
 
 
@@ -74,7 +80,7 @@ const App = () => {
         <Route path='/email-verify' element={<EmailVerify />} />
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path='/VisulisationSensor' element={<VisualisationSensor/>} />
-        <Route path='/dashboardAdmin' element={<DashboardAdmin/>} />
+        <Route path='/dashboardAdmin' element={<Dashboard/>} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/data-display' element={<DataDisplay />} />
        
@@ -133,25 +139,20 @@ const App = () => {
 
         <Route path='/EmpCN' element={<CNBZMap />}/>
 
-
-                <Route path='/tdschart' element={<TDSChart />}/>
-
-
-
-
+        <Route path='/reseaux' element={<ReseauxHydr />}/>
+        <Route path='/AddReseau' element={<AddReseau />}/>
+        <Route path='/ModifyReseau' element={<ModifyReseau />}/>
+        <Route path='/EmplcReseau' element={<ReseauMap />}/>
 
 
-
+        
 
 
 
 
-
-
-
-
-
-
+        <Route path='/tdschart' element={<TDSChart />}/>
+        <Route path='/phschart' element={<PhChart />}/>
+        <Route path='/users' element={<Users/>}/>
 
 
 

@@ -106,6 +106,9 @@ const Navbar = () => {
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   <a href="/geologie">Geologie</a>
                 </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <a href="/reseaux">Reseaux Hydro</a>
+                </li>
               </ul>
             )}
           </div> 

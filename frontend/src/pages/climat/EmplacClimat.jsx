@@ -1,13 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useMap, GeoJSON, TileLayer } from "react-leaflet";
+import { useMap, GeoJSON, TileLayer,WMSTileLayer  } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
-
-const climatStyle = {
-  color: "#2e8b57",
-  weight: 2,
-  fillColor: "#a9dfbf",
-  fillOpacity: 0.6,
-};
 
 function ClimatMap() {
   const [climatData, setClimatData] = useState(null);
@@ -64,14 +57,14 @@ function ClimatMap() {
   return (
     <>
       {/* WMS Layer from GeoServer */}
-      <TileLayer
-        url="http://localhost:8081/geoserver/bizerte/wms?service=WMS&version=1.1.0&request=GetMap"
-        params={{
-          layers: "bizerte:climat_Bizerte",
-          styles: "climat_style",
-          format: "image/png",
-          transparent: true,
-        }}
+      <WMSTileLayer
+        url="http://localhost:8081/geoserver/bizerte/wms"
+        layers= "bizerte:climat_Bizerte"
+        styles= "climat_bizerte"
+        format= "image/png"
+        transparent= {true}
+        version="1.1.1"
+        
       />
 
       {/* GeoJSON Layer with interactivity */}
@@ -81,7 +74,7 @@ function ClimatMap() {
             if (layer) geoJsonRef.current = layer;
           }}
           data={climatData}
-          style={() => climatStyle}
+          style={{opacity: 0, fillOpacity: 0}}
           onEachFeature={(feature, layer) => {
             const props = feature.properties;
 

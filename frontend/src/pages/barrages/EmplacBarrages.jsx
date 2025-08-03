@@ -1,13 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { GeoJSON, useMap } from "react-leaflet";
+import { GeoJSON, useMap,WMSTileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
-
-const formStyle = {
-  color: "#1f77b4",
-  weight: 2,
-  fillColor: "#aec7e8",
-  fillOpacity: 0.6,
-};
 
 function BarragesMap() {
   const [data, setData] = useState(null);
@@ -26,7 +19,7 @@ function BarragesMap() {
       ...json,
       features: json.features.map(f => ({
         ...f,
-        geometry: f.geom, // 💡 important
+        geometry: f.geom, 
       }))
     };
 
@@ -70,13 +63,24 @@ function BarragesMap() {
     });
   };
 
-  return data ? (
+  return (
+      <>
+              {/* ✅ Utilisation correcte de WMSTileLayer avec style SLD */}
+              <WMSTileLayer
+                url="http://localhost:8081/geoserver/bizerte/wms"
+                layers="bizerte:barrage"
+                styles="Barrages_Bizerte_sld"
+                format="image/png"
+                transparent={true}
+                version="1.1.1"
+              />
+    {data && (
     <GeoJSON
       ref={(layer) => {
         if (layer) geoJsonRef.current = layer;
       }}
       data={data}
-      style={() => formStyle}
+      style={{opacity: 0, fillOpacity: 0}}
       onEachFeature={(feature, layer) => {
         const props = feature.properties;
 
@@ -117,7 +121,11 @@ function BarragesMap() {
         }
       }}
     />
-  ) : null;
+  )
 }
+</>
+)
+
+    }
 
 export default BarragesMap;

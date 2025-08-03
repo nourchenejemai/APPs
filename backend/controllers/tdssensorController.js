@@ -2,9 +2,9 @@ import { tdsModel } from "../models/TdsModel.js";
 // POST /api/tds-data
 export const createTDSData = async (req, res) => {
   try {
-    const { timestamp, tds, ec,temperature,humidity} = req.body;
+    const { timestamp, tds, ec} = req.body;
 
-    const newTDSData = new tdsModel({ timestamp,tds, ec,temperature,humidity });
+    const newTDSData = new tdsModel({ timestamp,tds, ec });
     await newTDSData.save();
 
     res.status(201).json({ success: true, message: 'Data stored successfully', data: newTDSData });

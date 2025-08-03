@@ -93,5 +93,24 @@ forage.delete('/forages/:gid', async (req, res) => {
     res.status(500).json({ error: 'Error deleting forage' });
   }
 });
+forage.get('/forages/:gid', async (req, res) => {
+  const gid = parseInt(req.params.gid); // extraire l'id de l'URL
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM forages WHERE gid = $1',
+      [gid]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Forages not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error fetching data by ID:', error);
+    res.status(500).json({ error: 'Failed to fetch forages by ID' });
+  }
+});
 
 export default forage;

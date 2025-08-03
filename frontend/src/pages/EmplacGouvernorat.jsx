@@ -1,14 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { GeoJSON, useMap, TileLayer } from "react-leaflet";
+import { GeoJSON, useMap, WMSTileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
-// ✅ Add this style to fix the error
-const gouvernoratStyle = {
-  color: "#ff6600",
-  fillColor: "#ffcc99",
-  weight: 2,
-  fillOpacity: 0.5,
-};
 
 function GouvernoratMap() {
   const [gouvData, setGouvData] = useState(null);
@@ -29,26 +21,24 @@ function GouvernoratMap() {
 
   return (
     <>
-      <TileLayer
+      {/* ✅ Utilisation correcte de WMSTileLayer avec style SLD */}
+      <WMSTileLayer
         url="http://localhost:8081/geoserver/bizerte/wms"
-        params={{
-          service: "WMS",
-          request: "GetMap",
-          version: "1.1.0",
-          layers: "bizerte:gouvernorat",
-          styles: "Gouvernorat_Bizerte_SLD",
-          format: "image/png",
-          transparent: true,
-        }}
+        layers="bizerte:gouvernorat"
+        styles="Gouvernorat_Bizerte_SLD"
+        format="image/png"
+        transparent={true}
+        version="1.1.1"
       />
 
+      {/* ✅ Si tu veux conserver les interactions popup via GeoJSON */}
       {gouvData && (
         <GeoJSON
           ref={(layer) => {
             if (layer) geoJsonRef.current = layer;
           }}
           data={gouvData}
-          style={() => gouvernoratStyle}
+          style={{ opacity: 0, fillOpacity: 0}}
           onEachFeature={(feature, layer) => {
             const props = feature.properties;
             const content = `

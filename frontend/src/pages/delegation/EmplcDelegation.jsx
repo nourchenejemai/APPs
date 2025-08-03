@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { GeoJSON, useMap } from "react-leaflet";
+import { GeoJSON, useMap,WMSTileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 
-const delegationStyle = {
-  color: "#1f77b4",
-  weight: 2,
-  fillColor: "#aec7e8",
-  fillOpacity: 0.6,
-};
 
 const DelegationMap = () => {
   const [data, setData] = useState(null);
   const geoJsonRef = useRef(null); //GeoJSON ref
+    const featureCount = useRef(0);
   const map = useMap();
   const navigate = useNavigate();
 
@@ -22,13 +17,7 @@ const DelegationMap = () => {
         if (json?.features?.length) {
           setData(json);
 
-          // Delay until GeoJSON is rendered
-          setTimeout(() => {
-            if (geoJsonRef.current) {
-              const bounds = geoJsonRef.current.getBounds();
-              map.fitBounds(bounds, { padding: [50, 50] }); //Show all
-            }
-          }, 300);
+        
         }
       })
       .catch(error => {
@@ -58,11 +47,21 @@ const DelegationMap = () => {
     navigate("/ModifyDelegation", { state: { del: delegation } });
   };
 
-  return data ? (
+  return (
+    <>
+             <WMSTileLayer
+                 url="http://localhost:8081/geoserver/bizerte/wms"
+                layers="bizerte:Delegations_Bizerte_UTM"
+                styles="delegation_b"
+                format="image/png"
+                transparent={true}
+                version="1.1.1"
+                 />
+      { data && (
     <GeoJSON
       ref={geoJsonRef}
       data={data}
-      style={() => delegationStyle}
+      style={{opacity: 0, fillOpacity: 0}}
       onEachFeature={(feature, layer) => {
         const props = feature.properties;
 
@@ -88,9 +87,22 @@ const DelegationMap = () => {
             .getElementById(`delete-${props.id}`)
             .addEventListener("click", () => handleDelete(props.id));
         });
+         featureCount.current += 1;
+            if (featureCount.current === data.features.length) {
+              setTimeout(() => {
+                if (geoJsonRef.current) {
+                  const bounds = geoJsonRef.current.getBounds();
+                  if (bounds.isValid()) {
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                  }
+                }
+              }, 100);
+            }
       }}
     />
-  ) : null;
-};
+  ) 
+}
+</>
+  )}
 
 export default DelegationMap;

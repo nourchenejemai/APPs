@@ -1,13 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import { GeoJSON, useMap } from "react-leaflet";
+import { GeoJSON, useMap,WMSTileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import "leaflet/dist/leaflet.css";
 
-// Style vert pour CN
-const lineStyle = {
-  color: "green",
-  weight: 3,
-};
 
 function CnBZMap() {
   const [cnBZ, setCnBZ] = useState(null);
@@ -50,13 +45,27 @@ function CnBZMap() {
     navigate("/ModifyCN", { state: { cn } });
   };
 
-  return cnBZ ? (
+  return (
+
+  <>
+           <WMSTileLayer
+               url="http://localhost:8081/geoserver/bizerte/wms"
+              layers="bizerte:CN_Bizerte"
+              styles="CN_Bizerte_SLD"
+              format="image/png"
+              transparent={true}
+              version="1.1.1"
+               />
+  
+  
+  
+  {cnBZ && (
     <GeoJSON
       ref={(layer) => {
         if (layer) geoJsonRef.current = layer;
       }}
       data={cnBZ}
-      style={() => lineStyle}
+      style={{opacity: 0, fillOpacity: 0}}
       onEachFeature={(feature, layer) => {
         const props = feature.properties;
 
@@ -97,7 +106,9 @@ function CnBZMap() {
         }
       }}
     />
-  ) : null;
+  ) 
 }
+</>
+  )}
 
 export default CnBZMap;

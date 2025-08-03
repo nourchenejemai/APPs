@@ -30,6 +30,7 @@ import cnbizerte from "./routes/CN_BZRoutes.js"
 import cnbz from "./routes/CnBZPointsRoutes.js"
 import del from "./routes/DelegationsBZRoutes.js"
 import reseauHydr from "./routes/ReseauHydr.js"
+import reseau from "./routes/ReseauHydrPoint.js"
 import vertisol from "./routes/Vertisol_BZRoutes.js";
 import climat from "./routes/climat_BZRoutes.js";
 import geo from "./routes/GeologieRoutes.js";
@@ -40,6 +41,7 @@ import vert from "./routes/Vertisol_BZPointsRoutes.js";
 import climatbz from "./routes/ClimatPointRoutes.js"
 import delegationbz from "./routes/DelegationPointsRoutes.js";
 import geologiebz from "./routes/GeologiePointsRoutes.js";
+import phrouter from "./routes/phRoutes.js";
 
 dotenv.config();
 
@@ -113,6 +115,7 @@ app.use('/api',cnbz)
 
 app.use('/api',del)
 app.use('/api',reseauHydr)
+app.use('/api',reseau)
 app.use('/api',vertisol)
 app.use('/api',climat)
 app.use('/api',geo)
@@ -125,6 +128,8 @@ app.use('/api',delegationbz)
 app.use('/api',geologiebz)
 
 app.use('/api',TDSData)
+app.use('/api', phrouter);
+
 
 mongoose.connect(process.env.MONGODB_URI || require('./config/mongo.js').uri, { 
     useNewUrlParser: true, 

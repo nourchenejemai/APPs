@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation,useNavigate } from 'react-router-dom';
 import BackButton from '../../components/BackButton.jsx';
 import "react-datepicker/dist/react-datepicker.css";
-import { Surface } from 'recharts';
 
 function ModifyVertisol() {
     const [loading, setLoading] = useState(false);

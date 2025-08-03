@@ -1,15 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import { GeoJSON, useMap } from "react-leaflet";
+import { GeoJSON, useMap, WMSTileLayer  } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import "leaflet/dist/leaflet.css";
 
-// Style de la couche Vertisol (marron)
-const vertisolStyle = {
-  color: "#8B4513",        // bordure marron foncé
-  fillColor: "#DEB887",    // remplissage beige
-  weight: 2,
-  fillOpacity: 0.6,
-};
 
 function VertisolMap() {
   const [vertisols, setVertisols] = useState(null);
@@ -52,13 +45,26 @@ function VertisolMap() {
     navigate("/ModifyVertisol", { state: { vert } });
   };
 
-  return vertisols ? (
+  return (
+    <>
+    <WMSTileLayer
+      url="http://localhost:8081/geoserver/bizerte/wms"
+      layers="bizerte:Vertisols_BZ"
+      styles="vertsol_LD"
+      format="image/png"
+      transparent={true}
+      version="1.1.1"
+    />
+        
+
+  
+  {vertisols && (
     <GeoJSON
       ref={(layer) => {
         if (layer) geoJsonRef.current = layer;
       }}
       data={vertisols}
-      style={() => vertisolStyle}
+      style={{opacity: 0, fillOpacity: 0}}
       onEachFeature={(feature, layer) => {
         const props = feature.properties;
 
@@ -97,7 +103,9 @@ function VertisolMap() {
         }
       }}
     />
-  ) : null;
+  ) 
 }
+</>
+  )}
 
 export default VertisolMap;

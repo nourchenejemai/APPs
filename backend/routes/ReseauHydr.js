@@ -92,5 +92,25 @@ reseauHydr.delete('/reseauHydr/:id' , async(req,res)=>{
   }
 
 });
+reseauHydr.get('/reseauHydr/:id', async (req, res) => {
+  const id = parseInt(req.params.id); // extraire l'id de l'URL
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM public."Reseaux_Hydrographiques" WHERE id = $1',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Reseau hydrographique not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error fetching data by ID:', error);
+    res.status(500).json({ error: 'Failed to fetch reseau hydrographique by ID' });
+  }
+});
+
 
 export default reseauHydr;

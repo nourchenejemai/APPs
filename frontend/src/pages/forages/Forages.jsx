@@ -38,7 +38,7 @@ function Forages() {
   if (!confirmDelete) return; // Exit if user cancels
 
   try {
-    const response =     await fetch(`http://localhost:8080/api/forages/${gid}`, { method: 'DELETE' });
+    const response = await fetch(`http://localhost:8080/api/forages/${gid}`, { method: 'DELETE' });
 
     if (response.ok) {
       alert("Deleted successfully!");
@@ -49,6 +49,25 @@ function Forages() {
   } catch (error) {
     console.error("Error deleting item:", error);
     alert("An error occurred while deleting.");
+  }
+};
+const handleSearchById = async (gid) => {
+  if (!gid) {
+    fetchReseauHydr(); // reset to paginated list
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:8080/api/forages/${gid}`);
+    const data = await res.json();
+
+    if (data.message === "Forages not found") {
+      setForages([]); 
+    } else {
+      setForages([data]); 
+    }
+  } catch (error) {
+    console.error("Error searching by ID:", error);
   }
 };
 
@@ -62,6 +81,8 @@ function Forages() {
         <div>
           <BackButton />
           <h2 className="text-2xl font-bold mb-4">Management Forages </h2>
+                <div className="flex justify-between items-center mb-4">
+
            <button
                 onClick={() => navigate('/AddForages')}
                 className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200"
@@ -69,6 +90,14 @@ function Forages() {
                 <Plus className="w-5 h-5 mr-2" />
                 Ajouter
               </button>
+               {/* Search by ID */}
+            <input
+              type="number"
+              placeholder="Rechercher par ID..."
+              className="border border-gray-300 rounded px-3 py-2 shadow-sm"
+              onChange={(e) => handleSearchById(e.target.value)}
+            />
+              </div>
 
         <div className="overflow-x-auto">
 

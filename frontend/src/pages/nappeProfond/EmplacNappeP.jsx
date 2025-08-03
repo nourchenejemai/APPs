@@ -1,13 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useMap, GeoJSON } from "react-leaflet";
+import { useMap, GeoJSON,WMSTileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 
-const delegationStyle = {
-  color: "#8B4513", // brown border
-  weight: 2,
-  fillColor: "#D2B48C", // tan / brown fill
-  fillOpacity: 0.6,
-};
 
 function NappeProMap() {
   const [nappeP, setNappeP] = useState(null);
@@ -54,13 +48,25 @@ function NappeProMap() {
     navigate("/ModifyNappep", { state: { nappe } });
   };
 
-  return nappeP ? (
+  return (
+     <>
+         <WMSTileLayer
+             url="http://localhost:8081/geoserver/bizerte/wms"
+            layers="bizerte:NappeProfonde"
+            styles="Nappe_profonde2_SLD"
+            format="image/png"
+            transparent={true}
+            version="1.1.1"
+             />
+    
+        {nappeP && (
+  
     <GeoJSON
       ref={(layer) => {
         if (layer) geoJsonRef.current = layer;
       }}
       data={nappeP}
-      style={() => delegationStyle}
+      style={{opacity: 0, fillOpacity: 0}}
       onEachFeature={(feature, layer) => {
         const props = feature.properties;
 
@@ -108,7 +114,9 @@ function NappeProMap() {
         }
       }}
     />
-  ) : null;
+  ) 
 }
+</>
+  )}
 
 export default NappeProMap;
