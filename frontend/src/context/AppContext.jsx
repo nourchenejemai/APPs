@@ -12,6 +12,8 @@ export const AppContextProvider = (props)=> {
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const [isLoggedin, setIsLoggedin] = useState(false)
     const [userData, setUserData] = useState(null)
+    const [language, setLanguage] = useState('en') // 'en' ou 'fr'
+
 
     const getAuthState = async ()=>{
         try{
@@ -42,14 +44,23 @@ export const AppContextProvider = (props)=> {
         }
     }
     useEffect(()=>{
+        const savedLanguage = localStorage.getItem('appLanguage')
+    if (savedLanguage) {
+      setLanguage(savedLanguage)
+    }
         getAuthState();
     },[])
+     // Sauvegarder la langue dans le localStorage quand elle change
+  useEffect(() => {
+    localStorage.setItem('appLanguage', language)
+  }, [language])
 
     const value = {
         backendUrl,
         isLoggedin, setIsLoggedin,
         userData, setUserData,
-        getUserData
+        getUserData,
+        language,setLanguage
 
     }
     return(

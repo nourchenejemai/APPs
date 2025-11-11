@@ -24,10 +24,10 @@ const FeatureSection = () => {
         <div className="bg-white p-6 rounded-2xl shadow-md w-72 hover:scale-105 transition">
           <FaWater className="text-blue-600 text-4xl mx-auto mb-4" />
           <h3 onClick={() => navigate('/nappes')} className="text-xl font-semibold mb-2 text-blue-700">
-            Suivi des Nappes 
+            Suivi des ressources naturelles et environnementales 
           </h3>
           <p className="text-gray-600">
-            Analysez l'évolution du niveau et de la qualité de l’eau en continu.
+            Ces données s’inscrivent dans le cadre du suivi des ressources naturelles et environnementales, notamment l’eau et le sol.
           </p>
         </div>
         <div className="bg-white p-6 rounded-2xl shadow-md w-72 hover:scale-105 transition">

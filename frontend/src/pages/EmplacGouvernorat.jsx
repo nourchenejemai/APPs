@@ -44,7 +44,6 @@ function GouvernoratMap() {
             const content = `
               <strong>Gouvernorat</strong><br />
               <b>Nom:</b> ${props.Nom_gouver || "Bizerte"}<br />
-              <b>Code:</b> ${props.code_gouve || "17"}
             `;
             layer.bindPopup(content);
 

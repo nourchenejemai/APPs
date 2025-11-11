@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef,useContext } from "react";
 import { useMap, GeoJSON, TileLayer,WMSTileLayer  } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
-
+import { AppContext } from '../../context/AppContext';
 function ClimatMap() {
+  const { userData } = useContext(AppContext);
   const [climatData, setClimatData] = useState(null);
   const geoJsonRef = useRef(null);
   const featureCount = useRef(0);
@@ -83,11 +84,11 @@ function ClimatMap() {
               <strong>${props.clmnom}</strong><br />
               <b>Surface:</b> ${props.surface}<br />
               <b>Perimetre:</b> ${props.perimetre}<br />
-              <b>IDE:</b> ${props.clmide}<br />
-              <b>Clmcla:</b> ${props.clmcla}<br />
-              <b>Clmmox:</b> ${props.clmmox}<br /><br />
+              ${userData ? `
+      
               <button id="edit-${props.id}" style="background:#3498db;color:white;margin-right:5px">Edit</button>
               <button id="delete-${props.id}" style="background:#e74c3c;color:white">Delete</button>
+              ` : '' }
             `;
 
             layer.bindPopup(container);

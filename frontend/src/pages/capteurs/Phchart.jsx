@@ -32,7 +32,7 @@ const Phchart = () => {
   <div className="p-4 bg-white shadow rounded-xl">
     {/* Titre centré au-dessus du graphique */}
     <div className="text-center mb-4">
-      <h2 className="text-xl font-bold">Acidité de l’eau</h2>
+      <h2 className="text-xl font-bold">Ph de l’eau</h2>
     </div>
 
     {/* Conteneur du Gauge Chart avec taille contrôlée */}

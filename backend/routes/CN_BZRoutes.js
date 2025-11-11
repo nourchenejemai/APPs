@@ -1,7 +1,24 @@
 import { Router } from 'express';
 const cnbizerte = Router();
 import { pool } from '../config/postgres.js';
-
+// GET count of cnbz
+cnbizerte.get('/cnbz/count', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM public."CN_Bizerte" ');
+    const count = parseInt(result.rows[0].count);
+    
+    res.json({
+      success: true,
+      totalCourbe: count
+    });
+  } catch (error) {
+    console.error('Error counting courbe:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to count courbe' 
+    });
+  }
+});
 cnbizerte.get('/cn', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50;

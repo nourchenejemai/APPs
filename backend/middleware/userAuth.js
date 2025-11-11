@@ -2,7 +2,7 @@ import { request, response } from "express";
 import jwt from "jsonwebtoken";
 
 
-const userAuth = async (request, response , next)=>{
+export const userAuth = async (request, response , next)=>{
     const {token} = request.cookies;
 
     if(!token){
@@ -25,4 +25,5 @@ const userAuth = async (request, response , next)=>{
           response.json({success: false, message: error.message});
     }
 }
+
 export default userAuth;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../components/home/Navbar.jsx'
+import Navbar from '../components/Navbar.jsx'
 import ContenuHome from '../pages/ContenuHome.jsx';
-import FeatureSection from '../pages/FeatureSection.jsx'
 
 
 const Home = () => {
@@ -9,7 +8,6 @@ const Home = () => {
       <div className="absolute inset-0 flex flex-col">
         <Navbar />
         <ContenuHome />
-        <FeatureSection />
     </div>
   );
 };

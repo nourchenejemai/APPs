@@ -1,7 +1,24 @@
 import { Router } from 'express';
 const climat = Router();
 import { pool } from '../config/postgres.js';
-
+// GET count of climat
+climat.get('/climat/count', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM public."climat_Bizerte"');
+    const count = parseInt(result.rows[0].count);
+    
+    res.json({
+      success: true,
+      totalClimat: count
+    });
+  } catch (error) {
+    console.error('Error counting climat:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to count climat' 
+    });
+  }
+});
 climat.get('/climat', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50;

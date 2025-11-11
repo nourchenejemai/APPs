@@ -1,44 +1,12 @@
 import React, { useState } from 'react';
-import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from 'react-router-dom';
-import BackButton from '../../components/BackButton';
+import BackButton from '../../components/BackButton.jsx';
 
 function AddNappep() {
-  const navigate = useNavigate();
-  const [form, setForm] = useState({
-    id: '',
-    grom: '',
-    surface: '',
-    perimetre: '',
-    npride: '',
-    nprnom: '',
-    nprcod: '',
-    nprres: '',
-    nprexp: '',
-    nprqmi: '',
-    nprqma: ''
-  });
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:8080/api/Addnappep', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de l\'envoi du formulaire.');
-      }
-
-      alert('Formulaire soumis avec succès!');
-      setForm({
-        id: '',
+    const [form, setForm] = useState({
         geom: '',
         surface: '',
         perimetre: '',
@@ -49,56 +17,190 @@ function AddNappep() {
         nprexp: '',
         nprqmi: '',
         nprqma: ''
-      });
+    });
 
-    } catch (error) {
-      alert(error.message);
-      console.error('Submission error:', error);
-    }
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
 
-  return (
-    <div className="min-h-screen pt-8 px-6 bg-blue-400 text-gray-800">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-start mb-6">
-          <BackButton destination='/nappepro' />
-          </div>
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Ajouter Un Nappe Profond</h2>
-      
-      <form onSubmit={handleSubmit} className=" bg-white p-4 rounded shadow-md space-y-4">
-         <div className="grid grid-cols-1 gap-4">
-          <input name="geom" placeholder="Geometry" className="border p-2 rounded" value={form.geom} onChange={handleChange} />
-          </div>
-        <div className="grid grid-cols-3 gap-4">
-          <input name="surface" placeholder="Surface" className="border p-2 rounded" value={form.surface} onChange={handleChange} />
-          <input name="perimetre" placeholder="Perimetre" className="border p-2 rounded" value={form.perimetre} onChange={handleChange} />
-          <input name="npride" placeholder="nphide" className="border p-2 rounded" value={form.npride} onChange={handleChange} />
+        try {
+            const response = await fetch('http://localhost:8080/api/nappesp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+                body: JSON.stringify(form),
+            });
+            
+            if (response.ok) {
+                alert('Deep water table added successfully!');
+                navigate('/admin/nappesp');
+            } else {
+                throw new Error('Failed to add deep water table');
+            }
+        } catch (error) {
+            console.error('Error adding deep water table:', error);
+            alert('Error adding deep water table. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    return (
+        <div className="min-h-screen pt-8 px-6 bg-gradient-to-b from-blue-100 to-blue-300">
+            <div className="max-w-4xl mx-auto">
+                <div className="flex justify-start mb-6">
+                    <BackButton destination='/admin/nappepro' />
+                </div>
+                
+                <div className="bg-white rounded-lg shadow-lg p-8">
+                    <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Add New Deep Water Table</h2>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Geometry Field */}
+                        <div className="space-y-2">
+                            <label className="block text-sm font-medium text-gray-700">Geometry</label>
+                            <input 
+                                name="geom" 
+                                placeholder="Enter geometry data" 
+                                className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                value={form.geom} 
+                                onChange={handleChange} 
+                                required
+                            />
+                        </div>
+
+                        {/* Three column fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Surface</label>
+                                <input 
+                                    name="surface" 
+                                    placeholder="Surface" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.surface} 
+                                    onChange={handleChange} 
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Perimeter</label>
+                                <input 
+                                    name="perimetre" 
+                                    placeholder="Perimeter" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.perimetre} 
+                                    onChange={handleChange} 
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Water Table ID</label>
+                                <input 
+                                    name="npride" 
+                                    placeholder="Water table ID" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.npride} 
+                                    onChange={handleChange} 
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        {/* Another three column fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Water Table Name</label>
+                                <input 
+                                    name="nprnom" 
+                                    placeholder="Water table name" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.nprnom} 
+                                    onChange={handleChange} 
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Water Table Code</label>
+                                <input 
+                                    name="nprcod" 
+                                    placeholder="Water table code" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.nprcod} 
+                                    onChange={handleChange} 
+                                />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Water Table Resource</label>
+                                <input 
+                                    name="nprres" 
+                                    placeholder="Water table resource" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.nprres} 
+                                    onChange={handleChange} 
+                                />
+                            </div>
+                        </div>
+
+                        {/* Final three column fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Exploitation</label>
+                                <input 
+                                    name="nprexp" 
+                                    placeholder="Exploitation" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.nprexp} 
+                                    onChange={handleChange} 
+                                />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Minimum Flow Rate</label>
+                                <input 
+                                    name="nprqmi" 
+                                    placeholder="Minimum flow rate" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.nprqmi} 
+                                    onChange={handleChange} 
+                                />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">Maximum Flow Rate</label>
+                                <input 
+                                    name="nprqma" 
+                                    placeholder="Maximum flow rate" 
+                                    className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                                    value={form.nprqma} 
+                                    onChange={handleChange} 
+                                />
+                            </div>
+                        </div>
+
+                        {/* Submit Button */}
+                        <div className="text-center pt-6">
+                            <button 
+                                type="submit" 
+                                disabled={loading}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg shadow-md hover:shadow-lg transition duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {loading ? 'Adding...' : 'Add Deep Water Table'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <input name="nprnom" placeholder="nprnom" className="border p-2 rounded" value={form.nprnom} onChange={handleChange} />
-          <input name="nprcod" placeholder="nprcod" className="border p-2 rounded" value={form.nprcod} onChange={handleChange} />
-          <input name="nprres" placeholder="nprres" className="border p-2 rounded" value={form.nprres} onChange={handleChange} />
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <input name="nprexp" placeholder="nprexp" className="border p-2 rounded" value={form.nprexp} onChange={handleChange} />
-          <input name="nprqmi" placeholder="nprqmi" className="border p-2 rounded w-full" value={form.nprqmi} onChange={handleChange} />
-          <input name="nprqma" placeholder="nprqma" className="border p-2 rounded w-full" value={form.nprqma} onChange={handleChange} />
-
-
-        </div>
-        <div className="text-center">
-          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow"
-          onClick={()=> navigate('/nappepro')}>
-            Ajouter
-          </button>
-        </div>
-
-      </form>
-    </div>
-    </div>
-  );
+    );
 }
 
 export default AddNappep;

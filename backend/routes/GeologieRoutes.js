@@ -1,7 +1,24 @@
 import { Router } from 'express';
 const geo = Router();
 import { pool } from '../config/postgres.js';
-
+// GET count of geologie
+geo.get('/geologie/count', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM public.geologie_bizerte ');
+    const count = parseInt(result.rows[0].count);
+    
+    res.json({
+      success: true,
+      totalGeologie: count
+    });
+  } catch (error) {
+    console.error('Error counting geologie:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to count geologie' 
+    });
+  }
+});
 geo.get('/geologie', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50;

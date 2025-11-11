@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef,useContext } from "react";
 import { useMap, GeoJSON,WMSTileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from '../../context/AppContext';
 
 
 function NappeProMap() {
   const [nappeP, setNappeP] = useState(null);
+    const { userData } = useContext(AppContext);
+  
   const geoJsonRef = useRef(null);
   const map = useMap();
   const navigate = useNavigate();
@@ -69,6 +72,7 @@ function NappeProMap() {
       style={{opacity: 0, fillOpacity: 0}}
       onEachFeature={(feature, layer) => {
         const props = feature.properties;
+        
 
         const container = document.createElement("div");
         container.innerHTML = `
@@ -81,8 +85,10 @@ function NappeProMap() {
           <b>Exploitation:</b> ${props.nprexp}<br />
           <b>Qmin:</b> ${props.nprqmi}<br />
           <b>Qmax:</b> ${props.nprqma}<br />
+           ${userData ? `
           <button id="edit-${props.id}" style="background:#3498db;color:white;margin-right:5px">Edit</button>
           <button id="delete-${props.id}" style="background:#e74c3c;color:white">Delete</button>
+           ` : '' }
         `;
 
         layer.bindPopup(container);

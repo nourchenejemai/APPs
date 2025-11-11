@@ -1,7 +1,24 @@
 import { Router } from 'express';
 const del = Router();
 import { pool } from '../config/postgres.js';
-
+// GET count of delegation
+del.get('/delegation/count', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM public."Delegations_Bizerte_UTM"');
+    const count = parseInt(result.rows[0].count);
+    
+    res.json({
+      success: true,
+      totalDelegation: count
+    });
+  } catch (error) {
+    console.error('Error counting delegation:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to count delegation' 
+    });
+  }
+});
 del.get('/delegation', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50;

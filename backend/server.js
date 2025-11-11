@@ -41,7 +41,9 @@ import vert from "./routes/Vertisol_BZPointsRoutes.js";
 import climatbz from "./routes/ClimatPointRoutes.js"
 import delegationbz from "./routes/DelegationPointsRoutes.js";
 import geologiebz from "./routes/GeologiePointsRoutes.js";
-import phrouter from "./routes/phRoutes.js";
+import PhData from "./routes/phRoutes.js";
+import SolData from "./routes/SolhumRoutes.js";
+import Notification from "./routes/notifications.js";
 
 dotenv.config();
 
@@ -91,6 +93,8 @@ app.get('/', (request, response) => {
 });
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+
+
 app.use('/api', SensorDataRoutes);
 app.use('/api', contactRoutes);
 app.use("/api/geojson", geojsonRoutes);
@@ -128,7 +132,12 @@ app.use('/api',delegationbz)
 app.use('/api',geologiebz)
 
 app.use('/api',TDSData)
-app.use('/api', phrouter);
+app.use('/api', PhData);
+app.use('/api',SolData);
+
+app.use('/api',Notification)
+
+
 
 
 mongoose.connect(process.env.MONGODB_URI || require('./config/mongo.js').uri, { 

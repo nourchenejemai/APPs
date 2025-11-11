@@ -1,7 +1,24 @@
 import { Router } from 'express';
 const vertisol = Router();
 import { pool } from '../config/postgres.js';
-
+// GET count of vertisol
+vertisol.get('/vertisol/count', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM public."Vertisols_BZ" ');
+    const count = parseInt(result.rows[0].count);
+    
+    res.json({
+      success: true,
+      totalVertisol: count
+    });
+  } catch (error) {
+    console.error('Error counting vertisol:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to count vertisol' 
+    });
+  }
+});
 vertisol.get('/vertisols', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50;

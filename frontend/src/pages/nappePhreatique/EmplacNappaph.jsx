@@ -1,11 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef,useContext } from "react";
 import { useMap, GeoJSON,WMSTileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from '../../context/AppContext';
 
 
 
 function NappePhMap() {
   const [nappeph, setNappePh] = useState(null);
+    const { userData } = useContext(AppContext);
+  
   const geoJsonRef = useRef(null);
   const map = useMap();
   const navigate = useNavigate();
@@ -81,8 +84,10 @@ function NappePhMap() {
           <b>Exploitation:</b> ${props.nphexp}<br />
           <b>Qmin:</b> ${props.nphqmi}<br />
           <b>Qmax:</b> ${props.nphqma}<br />
+          ${userData ? `
           <button id="edit-${props.id}" style="background:#3498db;color:white;margin-right:5px">Edit</button>
           <button id="delete-${props.id}" style="background:#e74c3c;color:white">Delete</button>
+           ` : '' }
         `;
 
         layer.bindPopup(container);

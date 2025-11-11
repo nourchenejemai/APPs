@@ -6,28 +6,43 @@ import { isValidObjectId } from "mongoose";
 import transporter from "../config/nodemailer.js"
 import MailMessage from "nodemailer/lib/mailer/mail-message.js";
 import { EMAIL_VERIFY_TEMPLATE,PASSWORD_RESET_TEMPLATE } from "../config/emailTemplates.js";
+import NotificationService from "../services/notificationService.js";
 
 export const register = async (request, response)=>{
-    
-    const {name, email, password}= request.body;
+    const {name, email, password, role } = request.body;
 
-    if (!name || !email ||!password){
-        return response.json({success: false, message:'Missing Details'})
-
+    if (!name || !email || !password){
+        return response.json({success: false, message:'All fields are required'})
     }
+
     try {
         const existingUser = await userModel.findOne({email})
         if(existingUser){
             return response.json({success: false, message:'User already exists'});
         }
+
+        // Check if admin already exists in DB
+        if (role === "admin") {
+            const existingAdmin = await userModel.findOne({ role: "admin" });
+            if (existingAdmin) {
+                return response.status(403).json({
+                    message: "An admin already exists. You cannot register another admin."
+                });
+            }
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = new userModel({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role: role === "admin" ? "admin" : "user",
         });
         await user.save();
+
+        // ✅ AJOUT DE LA NOTIFICATION POUR NOUVEL UTILISATEUR
+        await NotificationService.createUserRegistrationNotification(user);
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, { expiresIn: '7d'});
 
@@ -37,44 +52,52 @@ export const register = async (request, response)=>{
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-         //send welcome email
-         const mailOptions = {
+
+        // Send welcome email
+        const mailOptions = {
             from: process.env.SENDER_EMAIL,
             to: email,
-            subject: 'Welcome to GreatStack',
-            text: `welcom to greatstack website. Your account has been created with email id: ${email}`
+            subject: 'Welcome to Smart Water BZ',
+            text: `Welcome to Smart Water BZ. Your account has been created with email: ${email}`
         }
 
         await transporter.sendMail(mailOptions);
 
-        return response.json({success: true});
+        // ✅ NOTIFICATION SYSTÈME POUR NOUVELLE INSCRIPTION
+        await NotificationService.createSystemNotification(`Nouvelle inscription: ${name} (${email})`);
 
+        return response.json({
+            success: true,
+            message: "User registered successfully",
+            userId: user._id,
+            role: user.role,
+        });
 
-    }catch(error){
+    } catch(error) {
+        console.error('Registration error:', error);
         response.json({success: false, message: error.message})
     }
-   
 }
 
 export const login = async (request, response)=>{
-    const {email, password}= request.body;
+    const {email, password} = request.body;
+    
     if(!email || !password){
-        return response.json({success: false,message: 'Email ans password are required'})
+        return response.json({success: false, message: 'Email and password are required'})
+    }
 
-    }try {
+    try {
         const user = await userModel.findOne({email});
-
         if(!user){
-            return response.json({success: false,message: 'Invalid email'})
-
+            return response.json({success: false, message: 'Invalid email or password'})
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch){
-            return response.json({success: false,message: 'Invalid password'})
-
+            return response.json({success: false, message: 'Invalid email or password'})
         }
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, { expiresIn: '7d'});
+
+        const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET, { expiresIn: '7d'});
 
         response.cookie('token', token ,{
             httpOnly: true,
@@ -82,34 +105,49 @@ export const login = async (request, response)=>{
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-        
-       
 
-        return response.json({success: true});
+        // ✅ NOTIFICATION DE CONNEXION (optionnelle)
+        await NotificationService.createSystemNotification(`Utilisateur connecté: ${user.name}`);
 
+        return response.json({
+            success: true,
+            role: user.role,
+            message: "Login successful",
+        });
 
-    }catch (error){
-        return  response.json({success: false, message: error.message});
+    } catch (error) {
+        console.error('Login error:', error);
+        return response.json({success: false, message: error.message});
     }
 }
 
-export const logout = async (request,response) =>{
+export const logout = async (request, response) =>{
     try{
+        // Récupérer l'utilisateur avant de le déconnecter pour la notification
+        const token = request.cookies.token;
+        if (token) {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await userModel.findById(decoded.id);
+            
+            if (user) {
+                // ✅ NOTIFICATION DE DÉCONNEXION (optionnelle)
+                await NotificationService.createSystemNotification(`Utilisateur déconnecté: ${user.name}`);
+            }
+        }
+
         response.clearCookie('token',{
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-           
         })
 
-        return response.json({success: true,message: "Logged Out"})
+        return response.json({success: true, message: "Logged Out"})
 
-    }catch (error){
-        return  response.json({success: false, message: error.message});
+    } catch (error) {
+        console.error('Logout error:', error);
+        return response.json({success: false, message: error.message});
     }
-
 }
-
 //send Verification OTP to the User's Email
 export const sendVerifyOtp = async (request, response)=>{
     try{

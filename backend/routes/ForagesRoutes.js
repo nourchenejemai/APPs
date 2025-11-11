@@ -2,6 +2,26 @@ import { Router } from 'express';
 const forage = Router();
 import { pool } from '../config/postgres.js';
 
+// GET count of barrages
+forage.get('/forages/count', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM public.forages');
+    const count = parseInt(result.rows[0].count);
+    
+    res.json({
+      success: true,
+      totalForages: count
+    });
+  } catch (error) {
+    console.error('Error counting forages:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to count forages' 
+    });
+  }
+});
+
+// GET forages with pagination
 forage.get('/forages', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50;
@@ -14,6 +34,50 @@ forage.get('/forages', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch PostgreSQL data' });
   }
 });
+
+// GET forages by titre_de_l
+forage.get('/forages/titre/:titre', async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = (page - 1) * limit;
+  const titre = req.params.titre;
+  
+  try {
+    // Récupérer les forages par titre avec pagination
+    const result = await pool.query(
+      'SELECT * FROM public.forages WHERE titre_de_l = $1 ORDER BY gid ASC LIMIT $2 OFFSET $3', 
+      [titre, limit, offset]
+    );
+    
+    // Récupérer le count total pour ce titre
+    const countResult = await pool.query(
+      'SELECT COUNT(*) FROM public.forages WHERE titre_de_l = $1', 
+      [titre]
+    );
+    const totalCount = parseInt(countResult.rows[0].count);
+    
+    res.json({
+      success: true,
+      forages: result.rows,
+      titre: titre,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
+        totalForages: totalCount,
+        hasNext: page < Math.ceil(totalCount / limit),
+        hasPrev: page > 1
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching forages by titre:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to fetch forages by titre' 
+    });
+  }
+});
+
+// POST Add forages
 forage.post('/Addforages', async (req, res) => {
   try {
     const form = req.body;
@@ -45,6 +109,8 @@ forage.post('/Addforages', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de l\'ajout du forage' });
   }
 });
+
+// PUT Update forages
 forage.put('/forages/:gid', async (req, res) => {
   try {
         const id = req.params.gid;
@@ -77,6 +143,8 @@ forage.put('/forages/:gid', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la mise à jour du forage' });
   }
 });
+
+// DELETE forages
 forage.delete('/forages/:gid', async (req, res) => {
   try {
     const id = req.params.gid;
@@ -93,6 +161,8 @@ forage.delete('/forages/:gid', async (req, res) => {
     res.status(500).json({ error: 'Error deleting forage' });
   }
 });
+
+// GET forage by ID
 forage.get('/forages/:gid', async (req, res) => {
   const gid = parseInt(req.params.gid); // extraire l'id de l'URL
 

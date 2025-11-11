@@ -15,9 +15,6 @@ import CNBZMap from "./cn_bizerte/EmplCN";
 import ReseauMap from "../pages/resauxHydr/EmplcReseau"
 import GouvernoratBizerteMap from "../pages/EmplacGouvernorat.jsx";
 
-import SearchControl from "../pages/SearchControl.jsx";
-
-
 const ResizeFixer = () => {
   const map = useMap();
   useEffect(() => {
@@ -31,7 +28,6 @@ const ResizeFixer = () => {
 
 const BizerteMap = () => {
   const [allFeatures, setAllFeatures] = useState([]);
-
 
   const [selectedLayers, setSelectedLayers] = useState({
     Gouvernorat: false,
@@ -54,38 +50,30 @@ const BizerteMap = () => {
       [layerName]: !prev[layerName],
     }));
   };
-  const handleLayerData = (features) => {
-  setAllFeatures((prev) => [...prev, ...features]);
-};
 
+  const handleLayerData = (features) => {
+    setAllFeatures((prev) => [...prev, ...features]);
+  };
 
   return (
-    <div className="w-full h-full relative ">
-      {/* Layer Checkbox Panel */}
-      <div className="absolute top-4 right-4 z-[1000] bg-white bg-opacity-90 backdrop-blur-sm shadow-xl p-4 rounded-lg w-auto max-w-xs text-sm">
-        <h2 className="font-bold text-gray-800 text-lg mb-3">Select Map Layers</h2>
-      <div className="grid grid-cols-1 gap-2">
-  
+    <div className="w-full h-full relative">
+      {/* Layer Checkbox Panel - Z-INDEX RÉDUIT */}
+      <div className="absolute top-4 right-4 z-[10] bg-white bg-opacity-90 backdrop-blur-sm shadow-xl p-4 rounded-lg w-auto max-w-xs text-sm">
+        <h2 className="font-bold text-gray-800 text-lg mb-3">select map layers</h2>
+        <div className="grid grid-cols-1 gap-2">
           {[
             { label: "Gouvernorat", key: "Gouvernorat" },
-
-            { label: "Forages", key: "Forages" },
-            { label: "Barrages", key: "Barrages" },
-            { label: "Nappe Phreatique", key: "NappePh" },
-            { label: "Nappe Profonde", key: "NappePro" },
-            
-            { label: "Climat", key: "Climat" },
             { label: "Delegation", key: "Delegation" },
-            { label: "Geologie", key: "Geologie" },
+            { label: "Climat", key: "Climat" },
             { label: "CnBZ", key: "CnBZ" },
-
+            { label: "Geologie", key: "Geologie" },
             { label: "Pedologie", key: "Pedologie" },
             { label: "Vertisol", key: "Vertisol" },
-            { label: "ReseauHyl", key: "ReseauHyl" },
-
-
-
-
+            { label: "ReseauHydro", key: "ReseauHyd" },
+            { label: "Barrages", key: "Barrages" },
+            { label: "Forages", key: "Forages" },
+            { label: "Nappe Phreatique", key: "NappePh" },
+            { label: "Nappe Profonde", key: "NappePro" },
           ].map(({ label, key }) => (
             <label key={key} className="text-sm">
               <input
@@ -100,55 +88,41 @@ const BizerteMap = () => {
         </div>
       </div>
 
-     <div className="w-full h-full relative">
-          <MapContainer
-            center={[34.0, 9.0]} // Center Tunisia
-            zoom={6}             // Show entire country
-            minZoom={5}
-            maxZoom={14}
-            scrollWheelZoom={true}
-            style={{ height: "100vh", width: "100%" }}
-            maxBounds={[
-              [30.0, 6.0], // Southwest Tunisia
-              [38.0, 12.0] // Northeast Tunisia
-            ]}
-            maxBoundsViscosity={0.5} // Allow slight panning out of bounds
-          >
-            <ResizeFixer />
+      {/* Map Container avec z-index bas */}
+      <div className="w-full h-full relative z-0">
+        <MapContainer
+          center={[34.0, 9.0]}
+          zoom={6}
+          minZoom={5}
+          maxZoom={14}
+          scrollWheelZoom={true}
+          style={{ height: "100vh", width: "100%" }}
+          maxBounds={[
+            [30.0, 6.0],
+            [38.0, 12.0]
+          ]}
+          maxBoundsViscosity={0.5}
+        >
+          <ResizeFixer />
 
-            <TileLayer
-              attribution="&copy; OpenStreetMap contributors"
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-
-            <SearchControl 
-              features={allFeatures} 
-              onFlyTo={(coords) => map.flyTo(coords, 12)} 
-            />
-          
-
-                 
+          <TileLayer
+            attribution="&copy; OpenStreetMap contributors"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
 
           {/* Layers */}
           {selectedLayers.Gouvernorat && <GouvernoratBizerteMap />}
-
-          {selectedLayers.Forages && <ForagesMap  />}
+          {selectedLayers.Forages && <ForagesMap />}
           {selectedLayers.Barrages && <BarragesMap />}
           {selectedLayers.NappePh && <NappePhMap />}
           {selectedLayers.NappePro && <NappeProMap />}
           {selectedLayers.Pedologie && <PedologieMap />}
-         
           {selectedLayers.Delegation && <DelegationMap />}
           {selectedLayers.Geologie && <GeologieMap />}
           {selectedLayers.CnBZ && <CNBZMap />}
-          
-           {selectedLayers.Vertisol && <VertisolMap />}
+          {selectedLayers.Vertisol && <VertisolMap />}
           {selectedLayers.Climat && <ClimatMap onData={handleLayerData} />}
-          {selectedLayers.ReseauHyl && <ReseauMap />}
-
-
-
-
+          {selectedLayers.ReseauHyd && <ReseauMap />}
         </MapContainer>
       </div>
     </div>

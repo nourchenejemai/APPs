@@ -1,7 +1,24 @@
 import { Router } from 'express';
 const nappe = Router();
 import { pool } from '../config/postgres.js';
-
+// GET count of nappes
+nappe.get('/nappes/count', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM public."NappePhreatique"');
+    const count = parseInt(result.rows[0].count);
+    
+    res.json({
+      success: true,
+      totalNappesP: count
+    });
+  } catch (error) {
+    console.error('Error counting nappe phreatique:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to count nappe phreatique' 
+    });
+  }
+});
 nappe.get('/nappes', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50;

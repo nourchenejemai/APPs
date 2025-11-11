@@ -5,6 +5,9 @@ import mail_icon from './mail_icon.svg'
 import person_icon from './person_icon.svg'
 import hand_wave from './hand_wave.png'
 import header_img from './header_img.png'
+import logoCerte from './logoCerte.png'
+import c from './c.jpg'
+import myphoto from './myphoto.jpg'
 
 export const assets = {
     arrow_icon,
@@ -13,5 +16,8 @@ export const assets = {
     mail_icon,
     person_icon,
     hand_wave,
-    header_img
+    header_img,
+    logoCerte,
+    c,
+    myphoto
 }

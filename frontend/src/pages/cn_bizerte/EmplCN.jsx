@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { GeoJSON, useMap,WMSTileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import "leaflet/dist/leaflet.css";
-
+import { AppContext } from '../../context/AppContext';
 
 function CnBZMap() {
   const [cnBZ, setCnBZ] = useState(null);
+  const { userData } = useContext(AppContext);
   const geoJsonRef = useRef(null);
   const featureCount = useRef(0);
   const map = useMap();
@@ -72,12 +73,13 @@ function CnBZMap() {
         const container = document.createElement("div");
         container.innerHTML = `
           <strong>${props.object || "CN"}</strong><br />
-          <b>Fnode:</b> ${props.fnode}<br />
-          <b>Tnode:</b> ${props.tnode}<br />
+        
           <b>Length:</b> ${props.lengthh}<br />
           <b>ID:</b> ${props.id}<br /><br />
+          ${userData ? `
           <button id="edit-${props.id}" style="background:#3498db;color:white;margin-right:5px">Edit</button>
           <button id="delete-${props.id}" style="background:#e74c3c;color:white">Delete</button>
+           ` : '' }
         `;
 
         layer.bindPopup(container);

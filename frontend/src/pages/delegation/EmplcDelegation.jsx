@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef,useContext } from "react";
 import { GeoJSON, useMap,WMSTileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from '../../context/AppContext';
 
 
 const DelegationMap = () => {
   const [data, setData] = useState(null);
+    const { userData } = useContext(AppContext);
+  
   const geoJsonRef = useRef(null); //GeoJSON ref
     const featureCount = useRef(0);
   const map = useMap();
@@ -73,8 +76,10 @@ const DelegationMap = () => {
           <b>Reftncod:</b> ${props.reftncod}<br/>
           <b>Shapearea:</b> ${props.shapearea}<br/>
           <b>Shapeleng:</b> ${props.shapeleng}<br/><br/>
+          ${userData ? `
           <button id="edit-${props.id}" style="background:#3498db;color:white;margin-right:5px">Edit</button>
           <button id="delete-${props.id}" style="background:#e74c3c;color:white">Delete</button>
+          ` : '' }
         `;
 
         layer.bindPopup(container);

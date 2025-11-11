@@ -2,6 +2,24 @@ import { Router } from 'express';
 const pedolog = Router();
 import { pool } from '../config/postgres.js';
 
+// GET count of pegologie
+pedolog.get('/pedologie/count', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM public."PEDOLOGIE" ');
+    const count = parseInt(result.rows[0].count);
+    
+    res.json({
+      success: true,
+      totalPedologie: count
+    });
+  } catch (error) {
+    console.error('Error counting pedologie:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to count pedologie' 
+    });
+  }
+});
 pedolog.get('/pedologie', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 50;
